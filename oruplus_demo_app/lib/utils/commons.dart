@@ -25,3 +25,6 @@ PageRouteBuilder pageNavigationAnimation(
     },
   );
 }
+
+bool canPopPage(BuildContext context) =>
+    ModalRoute.of(context)?.canPop ?? false;

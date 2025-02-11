@@ -1,28 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
-import 'package:oruplus_demo_app/utils/commons.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
-import 'package:oruplus_demo_app/view/auth/otp_screen.dart';
-import 'package:oruplus_demo_app/view/components/accepts_terms_checkbox.dart';
 import 'package:oruplus_demo_app/view/components/auth_button.dart';
 import 'package:oruplus_demo_app/view/components/auth_text_field.dart';
 import 'package:oruplus_demo_app/view/components/cancel_auth_button.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController phoneNumbercontroller = TextEditingController();
-
-  @override
-  void dispose() {
-    phoneNumbercontroller.dispose();
-    super.dispose();
-  }
+class _SignUpScreenState extends State<SignUpScreen> {
+  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             const Text(
-              "Sign in to continue",
+              "SignUp to continue",
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -63,25 +54,35 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AuthTextField(
-                  textController: phoneNumbercontroller,
-                  hintText: "Mobile Number",
-                  titleText: "Enter your Phone Number",
-                  isPhoneNumberField: true,
+                  textController: nameController,
+                  hintText: "Name",
+                  titleText: "Please Tell Us Your Name *",
+                  richTitleText: RichText(
+                    text: const TextSpan(
+                      text: "Please Tell Us Your Name ",
+                      style: TextStyle(
+                        color: CustomColors.blackColor,
+                        fontFamily: "Poppins",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "*",
+                          style: TextStyle(color: CustomColors.redColor),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
             const SizedBox(
               height: 120,
             ),
-            const AcceptsTermsCheckbox(),
             AuthButton(
-              buttonText: "Next",
-              onTap: () {
-                Navigator.of(context).push(pageNavigationAnimation(
-                  context,
-                  navigateWidget: const OtpScreen(),
-                ));
-              },
+              buttonText: "Confirm Name",
+              onTap: () {},
             ),
           ],
         ),
