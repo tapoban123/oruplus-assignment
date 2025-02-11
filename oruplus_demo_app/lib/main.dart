@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
+import 'package:oruplus_demo_app/view/home/home_screen.dart';
 import 'package:oruplus_demo_app/view/splash_screen/splash_screen.dart';
 
 void main() {
@@ -27,9 +28,12 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: CustomColors.whiteColor,
           elevation: 0,
         ),
+        inputDecorationTheme: const InputDecorationTheme(
+          hintStyle: TextStyle(color: CustomColors.mediumGreyColor)
+        ),
         textTheme: Theme.of(context).textTheme.apply(fontFamily: "Poppins"),
       ),
-      home: const SplashScreen(),
+      home: const HomeScreen(),
     );
   }
 }
