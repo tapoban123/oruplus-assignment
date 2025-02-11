@@ -12,6 +12,8 @@ class AppMediaPaths {
   static const String searchIcon = "assets/media/search_icon.png";
   static const String sortIcon = "assets/media/sort_icon.png";
   static const String filterIcon = "assets/media/filter_icon.png";
+  static const String iphoneImg = "assets/media/iphone_img.png";
+  static const String bookmarkLogo = "assets/media/bookmark_logo.png";
 
   // banners
   static const String banner1 = "assets/media/bannerSell.png";

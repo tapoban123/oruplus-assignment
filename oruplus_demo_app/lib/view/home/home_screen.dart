@@ -317,9 +317,245 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ],
-              )
+              ),
+              GridView.builder(
+                itemCount: 20,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 2 / 3.2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return const ItemCard();
+                },
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class ItemCard extends StatefulWidget {
+  const ItemCard({super.key});
+
+  @override
+  State<ItemCard> createState() => _ItemCardState();
+}
+
+class _ItemCardState extends State<ItemCard> {
+  ValueNotifier<bool> isFavourite = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: CustomColors.lightGreyColor,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                SizedBox(
+                    width: double.infinity,
+                    child: Image.asset(
+                      AppMediaPaths.iphoneImg,
+                      fit: BoxFit.cover,
+                    )),
+                Container(
+                  width: double.infinity,
+                  height: 21,
+                  color: const Color(0xff4C4C4C).withOpacity(0.69),
+                  alignment: Alignment.center,
+                  child: const Text(
+                    "PRICE NEGOTIABLE",
+                    style: TextStyle(
+                      fontSize: 9.6,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Positioned.fill(
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Image.asset(AppMediaPaths.bookmarkLogo),
+                              Positioned(
+                                top: 5,
+                                left: 10,
+                                child: Center(
+                                  child: RichText(
+                                    text: const TextSpan(
+                                      text: "ORU",
+                                      style: TextStyle(
+                                        fontSize: 9.6,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: "Poppins",
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: "Verified",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 6.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                isFavourite.value = !isFavourite.value;
+                              },
+                              child: ValueListenableBuilder(
+                                valueListenable: isFavourite,
+                                builder: (context, isFavouriteValue, child) {
+                                  if (isFavouriteValue) {
+                                    return const Icon(
+                                      CupertinoIcons.heart_fill,
+                                      color: Colors.red,
+                                    );
+                                  } else {
+                                    return const Icon(
+                                      CupertinoIcons.heart,
+                                      color: Colors.white,
+                                    );
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Apple iPhone 13 Pro",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  const Text(
+                    "12/256 GB \u2022 Like New",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: CustomColors.mediumGreyColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "₹ 41,500",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: CustomColors.blackColor,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      RichText(
+                        text: const TextSpan(
+                          text: "₹ 81,500 ",
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: CustomColors.mediumGreyColor,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: "(45% off)",
+                              style: TextStyle(color: CustomColors.redColor),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Container(
+              width: double.infinity,
+              height: 21,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+                color: const Color(0xffDFDFDF).withOpacity(0.77),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    child: Text(
+                      "Nijampur, Lucknow",
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400,
+                        color: CustomColors.mediumGreyColor,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "July 25th",
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: CustomColors.mediumGreyColor,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
