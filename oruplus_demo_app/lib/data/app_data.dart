@@ -1,4 +1,4 @@
-import 'package:oruplus_demo_app/model/other_models.dart';
+import 'package:oruplus_demo_app/data_model/other_models.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
 
 final List<FeatureModel> featuresList = [

@@ -2,12 +2,27 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oruplus_demo_app/data/app_data.dart';
-import 'package:oruplus_demo_app/model/other_models.dart';
+import 'package:oruplus_demo_app/data_model/brand_model.dart';
+import 'package:oruplus_demo_app/data_model/other_models.dart';
+import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
+import 'package:oruplus_demo_app/view_model/home/home_view_model.dart';
+import 'package:stacked/stacked.dart';
+import 'package:stacked/stacked_annotations.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,51 +230,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 height: 14,
               ),
-              SizedBox(
-                height: 64,
-                child: ListView.builder(
-                  itemCount: brandLogos.length + 1,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    if (index == brandLogos.length) {
-                      return Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: CustomColors.extraLightGreyColor,
-                        ),
-                        padding: const EdgeInsets.all(6),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "View All",
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w500,
-                                color: CustomColors.blueColor,
-                              ),
-                            ),
-                            Icon(
-                              Icons.arrow_forward,
-                              size: 12,
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 14.0),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: CustomColors.extraLightGreyColor,
-                        ),
-                        child: Image.asset(brandLogos[index]),
-                      ),
-                    );
-                  },
-                ),
-              ),
+              const TopBrandsList(),
               const SizedBox(
                 height: 34,
               ),
@@ -332,10 +303,123 @@ class HomeScreen extends StatelessWidget {
                   return const ItemCard();
                 },
               ),
+              FaqsDisplay(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class FaqsDisplay extends StatelessWidget {
+  const FaqsDisplay({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Frequently Asked Questions",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        Container(
+          child: ExpansionTile(
+            title:
+                Text("What are the benefits of selling phones on ORUphones?"),
+                children: [],
+          ),
+        )
+      ],
+    );
+  }
+}
+
+class TopBrandsList extends StatefulWidget {
+  const TopBrandsList({super.key});
+
+  @override
+  State<TopBrandsList> createState() => _TopBrandsListState();
+}
+
+class _TopBrandsListState extends State<TopBrandsList> {
+  late HomeRepository _homeRepository;
+
+  @override
+  void initState() {
+    _homeRepository = HomeRepository();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ViewModelBuilder.reactive(
+      viewModelBuilder: () =>
+          GetBrandsViewModel(homeRepository: _homeRepository),
+      builder: (context, viewModel, child) {
+        if (viewModel.isBusy) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final brands = viewModel.data as List<BrandModel>;
+
+        return SizedBox(
+          height: 64,
+          child: ListView.builder(
+            itemCount: brands.length + 1,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              if (index == brands.length) {
+                return Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: CustomColors.extraLightGreyColor,
+                  ),
+                  padding: const EdgeInsets.all(6),
+                  child: const Row(
+                    children: [
+                      Text(
+                        "View All",
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          color: CustomColors.blueColor,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_forward,
+                        size: 12,
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Padding(
+                padding: const EdgeInsets.only(right: 14.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: CustomColors.extraLightGreyColor,
+                  ),
+                  child: SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.network(
+                      brands[index].imagePath,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }
