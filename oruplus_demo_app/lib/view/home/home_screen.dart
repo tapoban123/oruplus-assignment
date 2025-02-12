@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oruplus_demo_app/data/app_data.dart';
 import 'package:oruplus_demo_app/data_model/brand_model.dart';
+import 'package:oruplus_demo_app/data_model/faq_model.dart';
 import 'package:oruplus_demo_app/data_model/other_models.dart';
 import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
@@ -303,7 +304,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const ItemCard();
                 },
               ),
-              FaqsDisplay(),
+              const FaqsDisplay(),
             ],
           ),
         ),
@@ -312,28 +313,138 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class FaqsDisplay extends StatelessWidget {
+class FaqsDisplay extends StatefulWidget {
   const FaqsDisplay({super.key});
+
+  @override
+  State<FaqsDisplay> createState() => _FaqsDisplayState();
+}
+
+class _FaqsDisplayState extends State<FaqsDisplay> {
+  late HomeRepository _homeRepository;
+
+  @override
+  void initState() {
+    _homeRepository = HomeRepository();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
+        const Text(
           "Frequently Asked Questions",
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w400,
           ),
         ),
-        Container(
-          child: ExpansionTile(
-            title:
-                Text("What are the benefits of selling phones on ORUphones?"),
-                children: [],
-          ),
-        )
+        ViewModelBuilder.reactive(
+          viewModelBuilder: () =>
+              GetFaqViewModel(homeRepository: _homeRepository),
+          builder: (context, viewModel, child) {
+            if (viewModel.isBusy) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            final faq = viewModel.data as List<FaqModel>;
+
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: faq.length,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return FAQExpansionTile(
+                  faqData: faq[index],
+                );
+              },
+            );
+          },
+        ),
       ],
+    );
+  }
+}
+
+class FAQExpansionTile extends StatefulWidget {
+  final FaqModel faqData;
+  const FAQExpansionTile({
+    super.key,
+    required this.faqData,
+  });
+
+  @override
+  State<FAQExpansionTile> createState() => _FAQExpansionTileState();
+}
+
+class _FAQExpansionTileState extends State<FAQExpansionTile> {
+  ValueNotifier<bool> isExpanded = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 10.0).copyWith(bottom: 10),
+      child: ValueListenableBuilder(
+        valueListenable: isExpanded,
+        builder: (context, expandedValue, child) => AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: expandedValue
+                ? [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.4),
+                      blurRadius: 3,
+                      spreadRadius: 0.5,
+                    )
+                  ]
+                : [],
+          ),
+          child: Theme(
+            data: ThemeData(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+            ),
+            child: ExpansionTile(
+              showTrailingIcon: false,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              backgroundColor: CustomColors.lightGreyColor,
+              collapsedBackgroundColor: CustomColors.lightGreyColor,
+              collapsedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              onExpansionChanged: (hasExpanded) {
+                isExpanded.value = hasExpanded;
+              },
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  SizedBox(
+                    width: 280,
+                    child: Text(widget.faqData.question),
+                  ),
+                  AnimatedRotation(
+                    duration: const Duration(milliseconds: 300),
+                    turns: expandedValue ? 1 / 8 : 0,
+                    curve: Curves.easeIn,
+                    child: const Icon(Icons.add),
+                  )
+                ],
+              ),
+              children: [
+                Container(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  child: Text(widget.faqData.answer),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
