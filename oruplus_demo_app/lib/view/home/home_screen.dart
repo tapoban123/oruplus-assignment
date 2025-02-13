@@ -1,6 +1,9 @@
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:oruplus_demo_app/data/app_data.dart';
 import 'package:oruplus_demo_app/data_model/brand_model.dart';
 import 'package:oruplus_demo_app/data_model/faq_model.dart';
@@ -9,8 +12,11 @@ import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
 import 'package:oruplus_demo_app/view_model/home/home_view_model.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:social_sharing_plus/social_sharing_plus.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked/stacked_annotations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,112 +26,154 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  ValueNotifier<bool> isUserScrollingDown = ValueNotifier(false);
+  late ScrollController _scrollController;
   @override
   void initState() {
+    _scrollController = ScrollController();
     super.initState();
+
+    _scrollController.addListener(
+      () {
+        if (_scrollController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          isUserScrollingDown.value = false;
+        } else {
+          isUserScrollingDown.value = true;
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leadingWidth: 150,
-        leading: Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Image.asset(AppMediaPaths.drawerIcon),
-            ),
-            SizedBox(
-              height: 30,
-              child: Image.asset(AppMediaPaths.oruLogoImage),
-            ),
-          ],
-        ),
-        actions: [
-          const Text(
-            "India",
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          const SizedBox(
-            width: 14,
-          ),
-          Image.asset(AppMediaPaths.locationIconIcon),
-          const SizedBox(
-            width: 14,
-          ),
-          TextButton(
-            onPressed: () {},
-            style: TextButton.styleFrom(
-              backgroundColor: CustomColors.yellowColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
-              ),
-              minimumSize: const Size(66, 29),
-            ),
-            child: const Text(
-              "Login",
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: CustomColors.blackColor,
-              ),
-            ),
-          ),
-          const SizedBox(
-            width: 14,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   leadingWidth: 150,
+
+      // ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Container(
-        width: 105,
-        height: 51,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(44),
-            color: CustomColors.darkColor,
-            border: Border.all(
-              width: 4,
-              color: CustomColors.yellowColor,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 8,
-                spreadRadius: 0.5,
-                offset: const Offset(1.5, 4),
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: isUserScrollingDown,
+        builder: (context, isUserScrollingDownValue, child) {
+          if (isUserScrollingDownValue) {
+            return const SizedBox.shrink();
+          }
+          return Container(
+            width: 105,
+            height: 51,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(44),
+                color: CustomColors.darkColor,
+                border: Border.all(
+                  width: 4,
+                  color: CustomColors.yellowColor,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.3),
+                    blurRadius: 8,
+                    spreadRadius: 0.5,
+                    offset: const Offset(1.5, 4),
+                  )
+                ]),
+            alignment: Alignment.center,
+            child: const Row(mainAxisSize: MainAxisSize.min, children: [
+              Text(
+                "Sell",
+                style: TextStyle(
+                  color: CustomColors.yellowColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(
+                width: 5,
+              ),
+              Icon(
+                Icons.add,
+                size: 24,
+                color: CustomColors.yellowColor,
               )
             ]),
-        alignment: Alignment.center,
-        child: const Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(
-            "Sell",
-            style: TextStyle(
-              color: CustomColors.yellowColor,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Icon(
-            Icons.add,
-            size: 24,
-            color: CustomColors.yellowColor,
-          )
-        ]),
+          );
+        },
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-              child: Column(
+      body: SafeArea(
+        child: CustomScrollView(
+          controller: _scrollController,
+          slivers: [
+            SliverAppBar(
+              pinned: false,
+              floating: true,
+              backgroundColor: CustomColors.whiteColor,
+              title: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: Image.asset(AppMediaPaths.drawerIcon),
+                          ),
+                          SizedBox(
+                            height: 30,
+                            child: Image.asset(AppMediaPaths.oruLogoImage),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                            "India",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 14,
+                          ),
+                          Image.asset(AppMediaPaths.locationIconIcon),
+                          const SizedBox(
+                            width: 14,
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            style: TextButton.styleFrom(
+                              backgroundColor: CustomColors.yellowColor,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              minimumSize: const Size(66, 29),
+                            ),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                                color: CustomColors.blackColor,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 14,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SliverAppBar(
+              pinned: true,
+              toolbarHeight: 110,
+              backgroundColor: CustomColors.whiteColor.withOpacity(0.5),
+              title: Column(
                 children: [
                   TextFormField(
                     decoration: InputDecoration(
@@ -179,6 +227,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
+                ],
+              ),
+            ),
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              sliver: SliverList(
+                  delegate: SliverChildListDelegate(
+                [
                   const BannerDislpay(),
                   const Text(
                     "What's on your mind?",
@@ -309,10 +365,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
                 ],
-              ),
+              )),
             ),
-            const FaqsDisplay(),
-            const BottomShareWidget(),
+            SliverToBoxAdapter(child: const FaqsDisplay()),
+            SliverToBoxAdapter(child: const BottomShareWidget()),
           ],
         ),
       ),
@@ -485,136 +541,203 @@ class BottomShareWidget extends StatelessWidget {
             ),
           ],
         ),
-        Material(
-          elevation: 20,
-          child: Stack(
-            children: [
-              Container(
-                width: double.infinity,
-                height: 578,
-                decoration: BoxDecoration(
-                  color: CustomColors.darkColor,
-                  border: Border.all(color: CustomColors.darkColor),
+        Stack(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 578,
+              decoration: BoxDecoration(
+                color: CustomColors.darkColor,
+                border: Border.all(color: CustomColors.darkColor),
+              ),
+            ),
+            Column(
+              children: [
+                const SizedBox(
+                  height: 50,
                 ),
-              ),
-              Column(
-                children: [
-                  const Text(
-                    "Download App",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: CustomColors.whiteColor,
-                    ),
+                const Text(
+                  "Download App",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: CustomColors.whiteColor,
                   ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 159,
-                            child: Image.asset(AppMediaPaths.playStoreQrLogo),
-                          ),
-                          const SizedBox(
-                            height: 14,
-                          ),
-                          SizedBox(
-                            height: 28,
-                            child: Image.asset(AppMediaPaths.googlePlayLogo),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 159,
-                            child: Image.asset(AppMediaPaths.appStoreQrLogo),
-                          ),
-                          const SizedBox(
-                            height: 14,
-                          ),
-                          SizedBox(
-                            height: 28,
-                            child: Image.asset(
-                              AppMediaPaths.appleLogo,
-                              color: CustomColors.whiteColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 100,
-                  ),
-                  Text(
-                    "Invite a Friend",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 20,
-                      color: CustomColors.whiteColor,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: 308,
-                        height: 238,
-                        decoration: BoxDecoration(
-                          color: CustomColors.whiteColor,
-                          borderRadius: BorderRadius.circular(40),
+                ),
+                const SizedBox(
+                  height: 34,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 159,
+                          child: Image.asset(AppMediaPaths.playStoreQrLogo),
                         ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        SizedBox(
+                          height: 28,
+                          child: Image.asset(AppMediaPaths.googlePlayLogo),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 159,
+                          child: Image.asset(AppMediaPaths.appStoreQrLogo),
+                        ),
+                        const SizedBox(
+                          height: 14,
+                        ),
+                        SizedBox(
+                          height: 28,
+                          child: Image.asset(
+                            AppMediaPaths.appleLogo,
+                            color: CustomColors.whiteColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 70,
+                ),
+                const Text(
+                  "Invite a Friend",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                    color: CustomColors.whiteColor,
+                  ),
+                ),
+                const SizedBox(
+                  height: 25,
+                ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      width: 308,
+                      height: 238,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: CustomColors.darkColor.withOpacity(0.4),
+                              blurRadius: 12,
+                              spreadRadius: 0.1,
+                              offset: const Offset(0, 2))
+                        ],
+                        color: CustomColors.whiteColor,
+                        borderRadius: BorderRadius.circular(40),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 260,
-                            child: Text(
-                              "Invite a friend to ORUphones application.\nTap to copy the respective download link to the clipboard",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w400,
-                                color: CustomColors.blackColor,
-                              ),
+                    ),
+                    const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 260,
+                          child: Text(
+                            "Invite a friend to ORUphones application.\nTap to copy the respective download link to the clipboard",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: CustomColors.blackColor,
                             ),
                           ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          ApplicationStoreButton(
-                            appStore: "Google Play",
-                            logo: AppMediaPaths.googlePlayLogo,
-                            subtitle: "GET IT ON",
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          ApplicationStoreButton(
-                            appStore: "App Store",
-                            logo: AppMediaPaths.appleLogo,
-                            subtitle: "Download on the",
-                            isAppStore: true,
-                          )
-                        ],
-                      )
-                    ],
-                  )
-                ],
-              ),
-            ],
-          ),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        ApplicationStoreButton(
+                          appStore: "Google Play",
+                          logo: AppMediaPaths.googlePlayLogo,
+                          subtitle: "GET IT ON",
+                        ),
+                        SizedBox(
+                          height: 16,
+                        ),
+                        ApplicationStoreButton(
+                          appStore: "App Store",
+                          logo: AppMediaPaths.appleLogo,
+                          subtitle: "Download on the",
+                          isAppStore: true,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text("Or share via"),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ShareOnAppButton(
+                      platform: SocialPlatform.facebook,
+                      appLogo: AppMediaPaths.instagramLogo,
+                    ),
+                    ShareOnAppButton(
+                      platform: SocialPlatform.telegram,
+                      appLogo: AppMediaPaths.telegramLogo,
+                    ),
+                    ShareOnAppButton(
+                      platform: SocialPlatform.twitter,
+                      appLogo: AppMediaPaths.twitterLogo,
+                    ),
+                    ShareOnAppButton(
+                      platform: SocialPlatform.whatsapp,
+                      appLogo: AppMediaPaths.whatsappLogo,
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ],
         ),
       ],
+    );
+  }
+}
+
+class ShareOnAppButton extends StatelessWidget {
+  final SocialPlatform platform;
+  final String appLogo;
+
+  const ShareOnAppButton({
+    super.key,
+    required this.platform,
+    required this.appLogo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      style: IconButton.styleFrom(
+        highlightColor: Colors.transparent,
+        overlayColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+      ),
+      onPressed: () async {
+        await SocialSharingPlus.shareToSocialMedia(
+          platform,
+          "I'd like to introduce you to Oru Phones, a user-friendly and convenient platform designed for buying and selling refurbished smartphones. With just three simple steps, you can easily sell your phones at competitive prices or purchase high-quality refurbished phones that look and work like new. Experience Oru Phones today by downloading the app\n\niOS: https://apps.apple.com/dk/app/oruphones-sell-used-phones/id1629378420\n\nAndroid: https://play.google.com/store/apps/details?id=com.oruphones.oru",
+        );
+      },
+      icon: SizedBox(
+        height: 40,
+        child: Image.asset(appLogo),
+      ),
     );
   }
 }
@@ -638,10 +761,10 @@ class ApplicationStoreButton extends StatelessWidget {
       width: 166,
       height: 55,
       decoration: BoxDecoration(
-        color: Color(0xff121212),
+        color: const Color(0xff121212),
         borderRadius: BorderRadius.circular(8),
       ),
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       alignment: Alignment.center,
       child: Row(
         children: [
@@ -652,7 +775,7 @@ class ApplicationStoreButton extends StatelessWidget {
               color: isAppStore ? CustomColors.whiteColor : null,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 8,
           ),
           Column(
@@ -660,7 +783,7 @@ class ApplicationStoreButton extends StatelessWidget {
             children: [
               Text(
                 subtitle,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
                   color: CustomColors.whiteColor,
@@ -668,7 +791,7 @@ class ApplicationStoreButton extends StatelessWidget {
               ),
               Text(
                 appStore,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
                   color: CustomColors.whiteColor,

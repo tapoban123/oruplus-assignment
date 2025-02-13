@@ -18,6 +18,10 @@ class AppMediaPaths {
   static const String playStoreQrLogo = "assets/media/play_store_qr.png";
   static const String appleLogo = "assets/media/apple-logo.png";
   static const String googlePlayLogo = "assets/media/google-play.png";
+  static const String instagramLogo = "assets/media/instagram.png";
+  static const String telegramLogo = "assets/media/telegram.png";
+  static const String twitterLogo = "assets/media/twiiter.png";
+  static const String whatsappLogo = "assets/media/whatsapp.png";
 
   // banners
   static const String banner1 = "assets/media/bannerSell.png";
