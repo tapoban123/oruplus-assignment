@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:oruplus_demo_app/utils/commons.dart';
 import 'package:oruplus_demo_app/view/home/home_screen.dart';
 
 class CancelAuthButton extends StatelessWidget {
@@ -9,12 +8,12 @@ class CancelAuthButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        Navigator.of(context).pushReplacement(pageNavigationAnimation(
-          context,
-          begin: const Offset(0, -1),
-          end: Offset.zero,
-          navigateWidget: const HomeScreen(),
-        ));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (route) => false,
+        );
       },
       icon: const Icon(Icons.close),
     );

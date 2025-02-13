@@ -10,7 +10,10 @@ import 'package:oruplus_demo_app/data_model/faq_model.dart';
 import 'package:oruplus_demo_app/data_model/other_models.dart';
 import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
+import 'package:oruplus_demo_app/utils/commons.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
+import 'package:oruplus_demo_app/view/auth/login_screen.dart';
+import 'package:oruplus_demo_app/view/components/home_drawer_content.dart';
 import 'package:oruplus_demo_app/view_model/home/home_view_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:social_sharing_plus/social_sharing_plus.dart';
@@ -28,9 +31,12 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   ValueNotifier<bool> isUserScrollingDown = ValueNotifier(false);
   late ScrollController _scrollController;
+  late GlobalKey<ScaffoldState> _homeScaffoldKey;
+
   @override
   void initState() {
     _scrollController = ScrollController();
+    _homeScaffoldKey = GlobalKey<ScaffoldState>();
     super.initState();
 
     _scrollController.addListener(
@@ -48,10 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   leadingWidth: 150,
-
-      // ),
+      key: _homeScaffoldKey,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: ValueListenableBuilder(
         valueListenable: isUserScrollingDown,
@@ -94,11 +97,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.add,
                 size: 24,
                 color: CustomColors.yellowColor,
-              )
+              ),
             ]),
           );
         },
       ),
+      drawer: const HomeDrawerContent(),
       body: SafeArea(
         child: CustomScrollView(
           controller: _scrollController,
@@ -106,128 +110,145 @@ class _HomeScreenState extends State<HomeScreen> {
             SliverAppBar(
               pinned: false,
               floating: true,
-              backgroundColor: CustomColors.whiteColor,
-              title: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 100.0, sigmaY: 100.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {},
+              automaticallyImplyLeading: false,
+              backgroundColor: CustomColors.whiteColor.withOpacity(0.5),
+              shape: InputBorder.none,
+              title: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Builder(
+                          builder: (context) => IconButton(
+                            onPressed: () {
+                              _homeScaffoldKey.currentState?.openDrawer();
+                            },
                             icon: Image.asset(AppMediaPaths.drawerIcon),
                           ),
-                          SizedBox(
-                            height: 30,
-                            child: Image.asset(AppMediaPaths.oruLogoImage),
+                        ),
+                        SizedBox(
+                          height: 30,
+                          child: Image.asset(AppMediaPaths.oruLogoImage),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        const Text(
+                          "India",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
                           ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          const Text(
-                            "India",
+                        ),
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        Image.asset(AppMediaPaths.locationIconIcon),
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                              (route) => false,
+                            );
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: CustomColors.yellowColor,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            minimumSize: const Size(66, 29),
+                          ),
+                          child: const Text(
+                            "Login",
                             style: TextStyle(
                               fontSize: 12,
-                              fontWeight: FontWeight.w400,
+                              fontWeight: FontWeight.w500,
+                              color: CustomColors.blackColor,
                             ),
                           ),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                          Image.asset(AppMediaPaths.locationIconIcon),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            style: TextButton.styleFrom(
-                              backgroundColor: CustomColors.yellowColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              minimumSize: const Size(66, 29),
-                            ),
-                            child: const Text(
-                              "Login",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: CustomColors.blackColor,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 14,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                        const SizedBox(
+                          width: 14,
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),
             SliverAppBar(
               pinned: true,
               toolbarHeight: 110,
-              backgroundColor: CustomColors.whiteColor.withOpacity(0.5),
-              title: Column(
-                children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                          borderSide: const BorderSide(
-                              color: CustomColors.lightGreyColor)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(11),
-                          borderSide: const BorderSide(
-                              color: CustomColors.lightGreyColor)),
-                      hintText: "Search phones with make, model...",
-                      prefixIcon: Image.asset(AppMediaPaths.searchIcon),
-                      suffixIcon: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 1.8,
-                            height: 20,
-                            color: CustomColors.mediumGreyColor,
-                          ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          SizedBox(
-                              height: 24,
-                              child: Image.asset(AppMediaPaths.micIcon)),
-                        ],
+              automaticallyImplyLeading: false,
+              backgroundColor: CustomColors.whiteColor.withOpacity(0.7),
+              title: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Column(
+                  children: [
+                    TextFormField(
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.whiteColor,
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(11),
+                            borderSide: const BorderSide(
+                                color: CustomColors.lightGreyColor)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(11),
+                            borderSide: const BorderSide(
+                                color: CustomColors.lightGreyColor)),
+                        hintText: "Search phones with make, model...",
+                        prefixIcon: Image.asset(AppMediaPaths.searchIcon),
+                        suffixIcon: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 1.8,
+                              height: 20,
+                              color: CustomColors.mediumGreyColor,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            SizedBox(
+                                height: 24,
+                                child: Image.asset(AppMediaPaths.micIcon)),
+                          ],
+                        ),
+                      ),
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTapOutside: (event) {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                    },
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(
+                      height: 10,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  SizedBox(
-                    height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: featuresList.length,
-                      itemBuilder: (context, index) {
-                        return FeatureWidget(
-                          feature: featuresList[index],
-                        );
-                      },
+                    SizedBox(
+                      height: 30,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: featuresList.length,
+                        itemBuilder: (context, index) {
+                          return FeatureWidget(
+                            feature: featuresList[index],
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SliverPadding(
@@ -367,8 +388,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               )),
             ),
-            SliverToBoxAdapter(child: const FaqsDisplay()),
-            SliverToBoxAdapter(child: const BottomShareWidget()),
+            const SliverToBoxAdapter(child: FaqsDisplay()),
+            const SliverToBoxAdapter(child: BottomShareWidget()),
           ],
         ),
       ),
@@ -676,11 +697,11 @@ class BottomShareWidget extends StatelessWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                Text("Or share via"),
-                SizedBox(
+                const Text("Or share via"),
+                const SizedBox(
                   height: 20,
                 ),
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ShareOnAppButton(
@@ -1297,14 +1318,15 @@ class FeatureWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(right: 12.0),
-      child: Chip(
-        color:
-            WidgetStatePropertyAll(Theme.of(context).scaffoldBackgroundColor),
-        shape: RoundedRectangleBorder(
+      child: Container(
+        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          side: const BorderSide(color: CustomColors.lightGreyColor),
+          border: Border.all(color: CustomColors.lightGreyColor),
+          color: Colors.transparent,
         ),
-        label: Row(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             feature.isNew
