@@ -86,8 +86,6 @@ class HomeRepository {
       for (final product in productsJson) {
         products.add(ProductModel.fromMap(product));
       }
-
-      debugPrint(products.toString());
     } catch (e) {
       debugPrint(e.toString());
     }

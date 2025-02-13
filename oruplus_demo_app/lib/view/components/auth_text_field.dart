@@ -83,8 +83,11 @@ class AuthTextField extends StatelessWidget {
             ),
           ),
           validator: (value) {
-            if (isPhoneNumberField && (value == null || value.length < 10)) {
-              return "Please enter a valid phone number.";
+            if (isPhoneNumberField && (value == null)) {
+              return "Please enter phone number.";
+            } else if (value != null &&
+                (value.length < 10 || value.length > 10)) {
+              return "Please enter a valid mobile number.";
             } else if (!isPhoneNumberField && value == null) {
               return "Please enter your name.";
             }
