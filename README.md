@@ -1,5 +1,22 @@
 # OruPhones 
 
+## Find the .apk files [here](apks).
+## Watch the video [here](https://drive.google.com/file/d/157MSyVck4z8nh3oZtvechT5VBVozE8bS/view?usp=sharing).
+
+## Features that I successfully implemented in the application:
+* The scrolling behavior on the Home Screen is same as the current OruPhones App in Google Play Store.
+* Users enter their phone number, generates otp via `otpCreate` endpoint and OTP validation is via `otpValidate` endpoint has been implemented. 
+* Data of all the displayed products has been fetched from the server using `filter` endpoint without providing any filter.
+* All the brands data has been fetched from the server using the `makeWithImages` endpoint.
+* All the faqs' data has been fetched from the server using `faq` endpoint.
+* Users can like/unlike any product.
+* Share functionality on multiple platforms(Instagram, Telegram, Twitter, Whatsapp). The respective apps open with content auto selected to share via post/story/message.
+ 
+## Features that I failed to implement in the application due to shortage of time:
+* Product Cards and Pagination
+* Firebase Push Notifications.
+* Auth State saving.
+
 ## Tools used:
 * **State Management**
     * [Stacked](https://stacked.filledstacks.com/)
