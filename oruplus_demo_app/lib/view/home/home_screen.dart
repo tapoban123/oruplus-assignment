@@ -119,194 +119,201 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         ]),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(11),
-                      borderSide:
-                          const BorderSide(color: CustomColors.lightGreyColor)),
-                  focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(11),
-                      borderSide:
-                          const BorderSide(color: CustomColors.lightGreyColor)),
-                  hintText: "Search phones with make, model...",
-                  prefixIcon: Image.asset(AppMediaPaths.searchIcon),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 1.8,
-                        height: 20,
-                        color: CustomColors.mediumGreyColor,
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                          height: 24,
-                          child: Image.asset(AppMediaPaths.micIcon)),
-                    ],
-                  ),
-                ),
-                onTapOutside: (event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              SizedBox(
-                height: 30,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: featuresList.length,
-                  itemBuilder: (context, index) {
-                    return FeatureWidget(
-                      feature: featuresList[index],
-                    );
-                  },
-                ),
-              ),
-              const BannerDislpay(),
-              const Text(
-                "What's on your mind?",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(
-                height: 170,
-                child: ListView.builder(
-                  itemCount: onYourMindContentData.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) => Padding(
-                    padding: const EdgeInsets.only(right: 15.0),
-                    child: SizedBox(
-                      height: 110,
-                      width: 90,
-                      child: Column(
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(11),
+                          borderSide: const BorderSide(
+                              color: CustomColors.lightGreyColor)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(11),
+                          borderSide: const BorderSide(
+                              color: CustomColors.lightGreyColor)),
+                      hintText: "Search phones with make, model...",
+                      prefixIcon: Image.asset(AppMediaPaths.searchIcon),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Image.asset(
-                            onYourMindContentData[index].imgPath,
-                            fit: BoxFit.contain,
+                          Container(
+                            width: 1.8,
+                            height: 20,
+                            color: CustomColors.mediumGreyColor,
                           ),
-                          Text(
-                            onYourMindContentData[index].title,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w400,
-                            ),
+                          const SizedBox(
+                            width: 10,
                           ),
+                          SizedBox(
+                              height: 24,
+                              child: Image.asset(AppMediaPaths.micIcon)),
                         ],
                       ),
                     ),
+                    onTapOutside: (event) {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ),
-              const Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Top brands",
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 30,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: featuresList.length,
+                      itemBuilder: (context, index) {
+                        return FeatureWidget(
+                          feature: featuresList[index],
+                        );
+                      },
+                    ),
+                  ),
+                  const BannerDislpay(),
+                  const Text(
+                    "What's on your mind?",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Icon(CupertinoIcons.right_chevron)
-                ],
-              ),
-              const SizedBox(
-                height: 14,
-              ),
-              const TopBrandsList(),
-              const SizedBox(
-                height: 34,
-              ),
-              RichText(
-                text: const TextSpan(
-                  text: "Best deals ",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: "Poppins",
-                    color: CustomColors.blackColor,
-                  ),
-                  children: [
-                    TextSpan(
-                      text: "in India",
-                      style: TextStyle(color: CustomColors.blueColor),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 84,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: CustomColors.lightGreyColor),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(AppMediaPaths.sortIcon),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Text(
-                          "Sort",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                  SizedBox(
+                    height: 170,
+                    child: ListView.builder(
+                      itemCount: onYourMindContentData.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) => Padding(
+                        padding: const EdgeInsets.only(right: 15.0),
+                        child: SizedBox(
+                          height: 110,
+                          width: 90,
+                          child: Column(
+                            children: [
+                              Image.asset(
+                                onYourMindContentData[index].imgPath,
+                                fit: BoxFit.contain,
+                              ),
+                              Text(
+                                onYourMindContentData[index].title,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(
-                          width: 5,
+                      ),
+                    ),
+                  ),
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Top brands",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w400,
                         ),
-                        const Icon(
-                          CupertinoIcons.chevron_down,
-                          size: 16,
-                        ),
+                      ),
+                      Icon(CupertinoIcons.right_chevron)
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 14,
+                  ),
+                  const TopBrandsList(),
+                  const SizedBox(
+                    height: 34,
+                  ),
+                  RichText(
+                    text: const TextSpan(
+                      text: "Best deals ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "Poppins",
+                        color: CustomColors.blackColor,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: "in India",
+                          style: TextStyle(color: CustomColors.blueColor),
+                        )
                       ],
                     ),
                   ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        width: 84,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: CustomColors.lightGreyColor),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(AppMediaPaths.sortIcon),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const Text(
+                              "Sort",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            const Icon(
+                              CupertinoIcons.chevron_down,
+                              size: 16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  GridView.builder(
+                    itemCount: 20,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 2 / 3.2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return const ItemCard();
+                    },
+                  ),
                 ],
               ),
-              GridView.builder(
-                itemCount: 20,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2 / 3.2,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return const ItemCard();
-                },
-              ),
-              const FaqsDisplay(),
-            ],
-          ),
+            ),
+            const FaqsDisplay(),
+            const BottomShareWidget(),
+          ],
         ),
       ),
     );
@@ -332,39 +339,345 @@ class _FaqsDisplayState extends State<FaqsDisplay> {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Frequently Asked Questions",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                Icon(
+                  CupertinoIcons.chevron_right,
+                  size: 20,
+                )
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          ViewModelBuilder.reactive(
+            viewModelBuilder: () =>
+                GetFaqViewModel(homeRepository: _homeRepository),
+            builder: (context, viewModel, child) {
+              if (viewModel.isBusy) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              final faq = viewModel.data as List<FaqModel>;
+
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: faq.length,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return FAQExpansionTile(
+                    faqData: faq[index],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class BottomShareWidget extends StatelessWidget {
+  const BottomShareWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
-          "Frequently Asked Questions",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w400,
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: 222,
+              width: 390,
+              color: CustomColors.yellowColor,
+            ),
+            Positioned(
+              top: 49,
+              child: Column(
+                children: [
+                  const SizedBox(
+                    width: 300,
+                    child: Text(
+                      "Get Notified About Our Latest Offers and Price Drops",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4,
+                        color: CustomColors.blackColor,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  SizedBox(
+                    width: 259,
+                    height: 43,
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(72),
+                              borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(72),
+                            borderSide: BorderSide.none,
+                          ),
+                          filled: true,
+                          fillColor: CustomColors.whiteColor,
+                          hintText: "Enter your email here",
+                          hintStyle: const TextStyle(
+                              color: CustomColors.mediumGreyColor),
+                          suffixIcon: FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 7.0),
+                              child: TextButton(
+                                onPressed: () {},
+                                style: TextButton.styleFrom(
+                                    backgroundColor: CustomColors.darkColor,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(43)),
+                                    minimumSize: const Size(75, 29)),
+                                child: const Text(
+                                  "Send",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    color: CustomColors.whiteColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 21)),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      onTapOutside: (event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        Material(
+          elevation: 20,
+          child: Stack(
+            children: [
+              Container(
+                width: double.infinity,
+                height: 578,
+                decoration: BoxDecoration(
+                  color: CustomColors.darkColor,
+                  border: Border.all(color: CustomColors.darkColor),
+                ),
+              ),
+              Column(
+                children: [
+                  const Text(
+                    "Download App",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: CustomColors.whiteColor,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 159,
+                            child: Image.asset(AppMediaPaths.playStoreQrLogo),
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          SizedBox(
+                            height: 28,
+                            child: Image.asset(AppMediaPaths.googlePlayLogo),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          SizedBox(
+                            height: 159,
+                            child: Image.asset(AppMediaPaths.appStoreQrLogo),
+                          ),
+                          const SizedBox(
+                            height: 14,
+                          ),
+                          SizedBox(
+                            height: 28,
+                            child: Image.asset(
+                              AppMediaPaths.appleLogo,
+                              color: CustomColors.whiteColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 100,
+                  ),
+                  Text(
+                    "Invite a Friend",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 20,
+                      color: CustomColors.whiteColor,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                  ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        width: 308,
+                        height: 238,
+                        decoration: BoxDecoration(
+                          color: CustomColors.whiteColor,
+                          borderRadius: BorderRadius.circular(40),
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 260,
+                            child: Text(
+                              "Invite a friend to ORUphones application.\nTap to copy the respective download link to the clipboard",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                color: CustomColors.blackColor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          ApplicationStoreButton(
+                            appStore: "Google Play",
+                            logo: AppMediaPaths.googlePlayLogo,
+                            subtitle: "GET IT ON",
+                          ),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          ApplicationStoreButton(
+                            appStore: "App Store",
+                            logo: AppMediaPaths.appleLogo,
+                            subtitle: "Download on the",
+                            isAppStore: true,
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ],
           ),
         ),
-        ViewModelBuilder.reactive(
-          viewModelBuilder: () =>
-              GetFaqViewModel(homeRepository: _homeRepository),
-          builder: (context, viewModel, child) {
-            if (viewModel.isBusy) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            final faq = viewModel.data as List<FaqModel>;
-
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: faq.length,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return FAQExpansionTile(
-                  faqData: faq[index],
-                );
-              },
-            );
-          },
-        ),
       ],
+    );
+  }
+}
+
+class ApplicationStoreButton extends StatelessWidget {
+  final String appStore;
+  final String logo;
+  final String subtitle;
+  final bool isAppStore;
+  const ApplicationStoreButton({
+    super.key,
+    required this.appStore,
+    required this.logo,
+    required this.subtitle,
+    this.isAppStore = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 166,
+      height: 55,
+      decoration: BoxDecoration(
+        color: Color(0xff121212),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: EdgeInsets.all(10),
+      alignment: Alignment.center,
+      child: Row(
+        children: [
+          SizedBox(
+            height: 30,
+            child: Image.asset(
+              logo,
+              color: isAppStore ? CustomColors.whiteColor : null,
+            ),
+          ),
+          SizedBox(
+            width: 8,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w400,
+                  color: CustomColors.whiteColor,
+                ),
+              ),
+              Text(
+                appStore,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: CustomColors.whiteColor,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
@@ -398,8 +711,9 @@ class _FAQExpansionTileState extends State<FAQExpansionTile> {
                 ? [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.4),
-                      blurRadius: 3,
+                      blurRadius: 8,
                       spreadRadius: 0.5,
+                      offset: const Offset(3, 3),
                     )
                   ]
                 : [],
@@ -412,11 +726,21 @@ class _FAQExpansionTileState extends State<FAQExpansionTile> {
             child: ExpansionTile(
               showTrailingIcon: false,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
-              backgroundColor: CustomColors.lightGreyColor,
-              collapsedBackgroundColor: CustomColors.lightGreyColor,
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(
+                  color: CustomColors.lightGreyColor,
+                  width: 2,
+                ),
+              ),
+              backgroundColor: CustomColors.extraLightGreyColor,
+              collapsedBackgroundColor: CustomColors.extraLightGreyColor,
               collapsedShape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+                borderRadius: BorderRadius.circular(8),
+                side: const BorderSide(
+                  color: CustomColors.lightGreyColor,
+                  width: 2,
+                ),
+              ),
               onExpansionChanged: (hasExpanded) {
                 isExpanded.value = hasExpanded;
               },
@@ -425,20 +749,42 @@ class _FAQExpansionTileState extends State<FAQExpansionTile> {
                 children: [
                   SizedBox(
                     width: 280,
-                    child: Text(widget.faqData.question),
+                    child: Text(
+                      widget.faqData.question,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                   AnimatedRotation(
                     duration: const Duration(milliseconds: 300),
                     turns: expandedValue ? 1 / 8 : 0,
                     curve: Curves.easeIn,
-                    child: const Icon(Icons.add),
+                    child: const Icon(
+                      Icons.add,
+                      color: CustomColors.blackColor,
+                    ),
                   )
                 ],
               ),
               children: [
                 Container(
                   color: Theme.of(context).scaffoldBackgroundColor,
-                  child: Text(widget.faqData.answer),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16).copyWith(
+                      top: 18,
+                      bottom: 14,
+                    ),
+                    child: Text(
+                      widget.faqData.answer,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
                 )
               ],
             ),

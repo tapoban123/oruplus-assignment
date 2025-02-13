@@ -14,6 +14,10 @@ class AppMediaPaths {
   static const String filterIcon = "assets/media/filter_icon.png";
   static const String iphoneImg = "assets/media/iphone_img.png";
   static const String bookmarkLogo = "assets/media/bookmark_logo.png";
+  static const String appStoreQrLogo = "assets/media/app_store_qr.png";
+  static const String playStoreQrLogo = "assets/media/play_store_qr.png";
+  static const String appleLogo = "assets/media/apple-logo.png";
+  static const String googlePlayLogo = "assets/media/google-play.png";
 
   // banners
   static const String banner1 = "assets/media/bannerSell.png";
@@ -44,11 +48,11 @@ class AppMediaPaths {
   static const String batteryHealthLogo = "assets/media/battery_health.png";
 
   // Company Logos
-  static const String appleLogo = "assets/media/apple.png";
-  static const String miLogo = "assets/media/mi.png";
-  static const String samsungLogo = "assets/media/samsung.png";
-  static const String vivologo = "assets/media/vivo.png";
-  static const String realmeLogo = "assets/media/realme.png";
-  static const String motorolaLogo = "assets/media/motorola.png";
-  static const String oppoLogo = "assets/media/oppo.png";
+  // static const String appleLogo = "assets/media/apple.png";
+  // static const String miLogo = "assets/media/mi.png";
+  // static const String samsungLogo = "assets/media/samsung.png";
+  // static const String vivologo = "assets/media/vivo.png";
+  // static const String realmeLogo = "assets/media/realme.png";
+  // static const String motorolaLogo = "assets/media/motorola.png";
+  // static const String oppoLogo = "assets/media/oppo.png";
 }

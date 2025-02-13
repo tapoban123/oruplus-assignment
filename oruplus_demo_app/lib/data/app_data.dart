@@ -115,12 +115,12 @@ List<OnYourMindContentModel> onYourMindContentData = [
   ),
 ];
 
-List<String> brandLogos = [
-  AppMediaPaths.appleLogo,
-  AppMediaPaths.miLogo,
-  AppMediaPaths.samsungLogo,
-  AppMediaPaths.vivologo,
-  AppMediaPaths.realmeLogo,
-  AppMediaPaths.motorolaLogo,
-  AppMediaPaths.oppoLogo,
-];
+// List<String> brandLogos = [
+//   AppMediaPaths.appleLogo,
+//   AppMediaPaths.miLogo,
+//   AppMediaPaths.samsungLogo,
+//   AppMediaPaths.vivologo,
+//   AppMediaPaths.realmeLogo,
+//   AppMediaPaths.motorolaLogo,
+//   AppMediaPaths.oppoLogo,
+// ];
