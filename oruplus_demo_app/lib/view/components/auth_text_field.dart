@@ -68,7 +68,30 @@ class AuthTextField extends StatelessWidget {
                 color: CustomColors.lightGreyColor,
               ),
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: const BorderSide(
+                width: 1,
+                color: CustomColors.redColor,
+              ),
+            ),
+            errorStyle: const TextStyle(
+              color: CustomColors.redColor,
+              fontSize: 14,
+              fontFamily: "Poppins",
+              fontWeight: FontWeight.w500,
+            ),
           ),
+          validator: (value) {
+            if (isPhoneNumberField && (value == null || value.length < 10)) {
+              return "Please enter a valid phone number.";
+            } else if (!isPhoneNumberField && value == null) {
+              return "Please enter your name.";
+            }
+            return null;
+          },
+          keyboardType:
+              isPhoneNumberField ? TextInputType.phone : TextInputType.name,
           style: const TextStyle(fontSize: 16),
         ),
       ],

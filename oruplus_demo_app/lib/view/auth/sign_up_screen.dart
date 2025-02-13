@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
+import 'package:oruplus_demo_app/utils/commons.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
 import 'package:oruplus_demo_app/view/components/auth_button.dart';
 import 'package:oruplus_demo_app/view/components/auth_text_field.dart';
 import 'package:oruplus_demo_app/view/components/cancel_auth_button.dart';
+import 'package:oruplus_demo_app/view/home/home_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -82,7 +84,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             AuthButton(
               buttonText: "Confirm Name",
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushAndRemoveUntil(
+                  pageNavigationAnimation(context,
+                      navigateWidget: const HomeScreen()),
+                  (route) => false,
+                );
+              },
             ),
           ],
         ),

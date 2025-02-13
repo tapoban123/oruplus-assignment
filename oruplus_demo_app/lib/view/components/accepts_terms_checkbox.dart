@@ -9,7 +9,7 @@ class AcceptsTermsCheckbox extends StatefulWidget {
 }
 
 class _AcceptsTermsCheckboxState extends State<AcceptsTermsCheckbox> {
-  ValueNotifier<bool> isChecked = ValueNotifier(false);
+  ValueNotifier<bool> isChecked = ValueNotifier(true);
 
   @override
   Widget build(BuildContext context) {

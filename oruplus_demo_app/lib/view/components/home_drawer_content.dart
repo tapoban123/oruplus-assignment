@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
@@ -52,7 +51,7 @@ class HomeDrawerContent extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
+                          builder: (context) => LoginScreen(),
                         ),
                         (route) => false,
                       );

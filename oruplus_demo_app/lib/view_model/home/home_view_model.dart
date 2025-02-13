@@ -1,5 +1,6 @@
 import 'package:oruplus_demo_app/data_model/brand_model.dart';
 import 'package:oruplus_demo_app/data_model/faq_model.dart';
+import 'package:oruplus_demo_app/data_model/product_model.dart';
 import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:stacked/stacked.dart';
 
@@ -35,5 +36,21 @@ class GetBrandsViewModel extends FutureViewModel {
   Future<List<BrandModel>> fetchBrandData() async {
     final brandData = await homeRepository.fetchBrandData();
     return brandData;
+  }
+}
+
+class FetchAllProductsViewModel extends FutureViewModel {
+  final HomeRepository _homeRepository;
+
+  FetchAllProductsViewModel({
+    required HomeRepository homeRepository,
+  }) : _homeRepository = homeRepository;
+
+  @override
+  Future futureToRun() => fetchAllProducts();
+
+  Future<List<ProductModel>> fetchAllProducts() async {
+    final products = await _homeRepository.fetchAllProducts();
+    return products;
   }
 }

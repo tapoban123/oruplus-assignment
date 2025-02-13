@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -12,27 +13,29 @@ class AuthRepository {
       final response = await http.post(
         Uri.parse("http://40.90.224.241:5000/login/otpCreate"),
         headers: {
-          "Cookie":
+          HttpHeaders.cookieHeader:
               "session=s%3A67a737ad7fca4dd2c99801c4.np%2FXficYhw7YzQ%2BCOge3GhoBtL%2F%2BAt49gB1I%2Fp1ElzU",
-          "Cache-Control": "no-cache",
-          "Connection": "keep-alive",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept": "*/*",
-          "User-Agent": "PostmanRuntime/7.43.0",
+          HttpHeaders.cacheControlHeader: "no-cache",
+          HttpHeaders.connectionHeader: "keep-alive",
+          HttpHeaders.acceptEncodingHeader: "gzip, deflate, br",
+          HttpHeaders.acceptHeader: "*/*",
+          HttpHeaders.userAgentHeader: "PostmanRuntime/7.43.0",
+          HttpHeaders.contentTypeHeader: "application/json",
         },
-        body: {
+        body: jsonEncode({
           "countryCode": countryCode,
           "mobileNumber": mobileNumber,
-        },
+        }),
       );
 
       if (response.statusCode == 200) {
         debugPrint("OTP Created");
       } else {
-        throw const HttpException("Failed to create OTP.");
+        throw HttpException("${response.statusCode}: ${response.body}");
       }
     } catch (e) {
-      throw Exception(e.toString());
+      debugPrint(e.toString());
+      throw Exception("An error occurred.");
     }
   }
 
@@ -41,23 +44,25 @@ class AuthRepository {
     required int phoneNumber,
     required int otp,
   }) async {
+    // OTP is the last 4 digits of the phone number.
     try {
       final response = await http.post(
         Uri.parse("http://40.90.224.241:5000/login/otpValidate"),
         headers: {
-          "Cookie":
+          HttpHeaders.cookieHeader:
               "session=s%3A67a737ad7fca4dd2c99801c4.np%2FXficYhw7YzQ%2BCOge3GhoBtL%2F%2BAt49gB1I%2Fp1ElzU",
-          "Cache-Control": "no-cache",
-          "Connection": "keep-alive",
-          "Accept-Encoding": "gzip, deflate, br",
-          "Accept": "*/*",
-          "User-Agent": "PostmanRuntime/7.43.0",
+          HttpHeaders.cacheControlHeader: "no-cache",
+          HttpHeaders.connectionHeader: "keep-alive",
+          HttpHeaders.acceptEncodingHeader: "gzip, deflate, br",
+          HttpHeaders.acceptHeader: "*/*",
+          HttpHeaders.userAgentHeader: "PostmanRuntime/7.43.0",
+          HttpHeaders.contentTypeHeader: "application/json",
         },
-        body: {
+        body: jsonEncode({
           "countryCode": countryCode,
           "mobileNumber": phoneNumber,
           "otp": otp,
-        },
+        }),
       );
 
       if (response.statusCode == 200) {

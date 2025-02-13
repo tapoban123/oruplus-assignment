@@ -11,8 +11,6 @@ class FaqModel {
     required this.answer,
   });
 
-  
-
   FaqModel copyWith({
     String? id,
     String? question,
@@ -43,19 +41,20 @@ class FaqModel {
 
   String toJson() => json.encode(toMap());
 
-  factory FaqModel.fromJson(String source) => FaqModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory FaqModel.fromJson(String source) =>
+      FaqModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'FaqModel(id: $id, question: $question, answer: $answer)';
+  String toString() =>
+      'FaqModel(id: $id, question: $question, answer: $answer)';
 
   @override
   bool operator ==(covariant FaqModel other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.question == question &&
-      other.answer == answer;
+
+    return other.id == id &&
+        other.question == question &&
+        other.answer == answer;
   }
 
   @override

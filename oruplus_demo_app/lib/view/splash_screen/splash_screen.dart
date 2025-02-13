@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
 import 'package:oruplus_demo_app/utils/commons.dart';
-import 'package:oruplus_demo_app/view/auth/login_screen.dart';
+import 'package:oruplus_demo_app/view/home/home_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen>
           Navigator.of(context).pushAndRemoveUntil(
             pageNavigationAnimation(
               context,
-              navigateWidget: const LoginScreen(),
+              navigateWidget: const HomeScreen(),
             ),
             (route) => false,
           );

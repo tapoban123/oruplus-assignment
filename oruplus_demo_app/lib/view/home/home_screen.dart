@@ -8,18 +8,15 @@ import 'package:oruplus_demo_app/data/app_data.dart';
 import 'package:oruplus_demo_app/data_model/brand_model.dart';
 import 'package:oruplus_demo_app/data_model/faq_model.dart';
 import 'package:oruplus_demo_app/data_model/other_models.dart';
+import 'package:oruplus_demo_app/data_model/product_model.dart';
 import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:oruplus_demo_app/utils/app_media_paths.dart';
-import 'package:oruplus_demo_app/utils/commons.dart';
 import 'package:oruplus_demo_app/utils/custom_colors.dart';
 import 'package:oruplus_demo_app/view/auth/login_screen.dart';
 import 'package:oruplus_demo_app/view/components/home_drawer_content.dart';
 import 'package:oruplus_demo_app/view_model/home/home_view_model.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:social_sharing_plus/social_sharing_plus.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked/stacked_annotations.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,11 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
   ValueNotifier<bool> isUserScrollingDown = ValueNotifier(false);
   late ScrollController _scrollController;
   late GlobalKey<ScaffoldState> _homeScaffoldKey;
+  late HomeRepository _homeRepository;
 
   @override
   void initState() {
     _scrollController = ScrollController();
     _homeScaffoldKey = GlobalKey<ScaffoldState>();
+    _homeRepository = HomeRepository();
+
     super.initState();
 
     _scrollController.addListener(
@@ -154,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onPressed: () {
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (context) => const LoginScreen(),
+                                builder: (context) => LoginScreen(),
                               ),
                               (route) => false,
                             );
@@ -370,19 +370,34 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  GridView.builder(
-                    itemCount: 20,
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 2 / 3.2,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return const ItemCard();
+                  ViewModelBuilder.reactive(
+                    viewModelBuilder: () => FetchAllProductsViewModel(
+                        homeRepository: _homeRepository),
+                    builder: (context, viewModel, child) {
+                      if (viewModel.isBusy) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      final products = viewModel.data as List<ProductModel>;
+
+                      return GridView.builder(
+                        itemCount: products.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2 / 3.2,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                        ),
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return ItemCard(
+                            productData: products[index],
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
@@ -1026,7 +1041,11 @@ class _TopBrandsListState extends State<TopBrandsList> {
 }
 
 class ItemCard extends StatefulWidget {
-  const ItemCard({super.key});
+  final ProductModel productData;
+  const ItemCard({
+    super.key,
+    required this.productData,
+  });
 
   @override
   State<ItemCard> createState() => _ItemCardState();
@@ -1053,25 +1072,29 @@ class _ItemCardState extends State<ItemCard> {
               alignment: Alignment.bottomCenter,
               children: [
                 SizedBox(
-                    width: double.infinity,
-                    child: Image.asset(
-                      AppMediaPaths.iphoneImg,
-                      fit: BoxFit.cover,
-                    )),
-                Container(
                   width: double.infinity,
-                  height: 21,
-                  color: const Color(0xff4C4C4C).withOpacity(0.69),
-                  alignment: Alignment.center,
-                  child: const Text(
-                    "PRICE NEGOTIABLE",
-                    style: TextStyle(
-                      fontSize: 9.6,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.white,
-                    ),
+                  height: 181,
+                  child: Image.network(
+                    widget.productData.imagePath,
+                    fit: BoxFit.cover,
                   ),
                 ),
+                widget.productData.openForNegotiation
+                    ? Container(
+                        width: double.infinity,
+                        height: 21,
+                        color: const Color(0xff4C4C4C).withOpacity(0.69),
+                        alignment: Alignment.center,
+                        child: const Text(
+                          "PRICE NEGOTIABLE",
+                          style: TextStyle(
+                            fontSize: 9.6,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
                 Positioned.fill(
                   child: Align(
                     alignment: Alignment.topCenter,
@@ -1080,36 +1103,38 @@ class _ItemCardState extends State<ItemCard> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Image.asset(AppMediaPaths.bookmarkLogo),
-                              Positioned(
-                                top: 5,
-                                left: 10,
-                                child: Center(
-                                  child: RichText(
-                                    text: const TextSpan(
-                                      text: "ORU",
-                                      style: TextStyle(
-                                        fontSize: 9.6,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: "Poppins",
-                                      ),
-                                      children: [
-                                        TextSpan(
-                                          text: "Verified",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w500,
+                          widget.productData.verified
+                              ? Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Image.asset(AppMediaPaths.bookmarkLogo),
+                                    Positioned(
+                                      top: 5,
+                                      left: 10,
+                                      child: Center(
+                                        child: RichText(
+                                          text: const TextSpan(
+                                            text: "ORU",
+                                            style: TextStyle(
+                                              fontSize: 9.6,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: "Poppins",
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: "Verified",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                                  ],
+                                )
+                              : const SizedBox.shrink(),
                           Padding(
                             padding: const EdgeInsets.only(right: 6.0),
                             child: GestureDetector(
@@ -1146,9 +1171,10 @@ class _ItemCardState extends State<ItemCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Apple iPhone 13 Pro",
-                    style: TextStyle(
+                  Text(
+                    widget.productData.marketingName,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1156,9 +1182,10 @@ class _ItemCardState extends State<ItemCard> {
                   const SizedBox(
                     height: 2,
                   ),
-                  const Text(
-                    "12/256 GB \u2022 Like New",
-                    style: TextStyle(
+                  Text(
+                    "${widget.productData.deviceRam}/${widget.productData.deviceStorage} GB \u2022 ${widget.productData.deviceCondition}",
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
                       color: CustomColors.mediumGreyColor,
@@ -1170,33 +1197,37 @@ class _ItemCardState extends State<ItemCard> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Text(
-                        "₹ 41,500",
-                        style: TextStyle(
+                      Text(
+                        "₹ ${widget.productData.discountedPrice ?? widget.productData.listingPrice}",
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                           color: CustomColors.blackColor,
                         ),
                       ),
                       const SizedBox(
-                        width: 10,
+                        width: 8,
                       ),
-                      RichText(
-                        text: const TextSpan(
-                          text: "₹ 81,500 ",
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: CustomColors.mediumGreyColor,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: "(45% off)",
-                              style: TextStyle(color: CustomColors.redColor),
-                            ),
-                          ],
-                        ),
-                      ),
+                      widget.productData.originalPrice != null
+                          ? RichText(
+                              text: TextSpan(
+                                text: "₹ ${widget.productData.originalPrice} ",
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                  color: CustomColors.mediumGreyColor,
+                                ),
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "(${widget.productData.discountPercentage?.round()}% off)",
+                                    style:
+                                        TextStyle(color: CustomColors.redColor),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ],
@@ -1214,15 +1245,15 @@ class _ItemCardState extends State<ItemCard> {
                 color: const Color(0xffDFDFDF).withOpacity(0.77),
               ),
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SizedBox(
                     width: 80,
                     child: Text(
-                      "Nijampur, Lucknow",
+                      "${widget.productData.listingLocation}, ${widget.productData.listingState}",
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w400,
                         color: CustomColors.mediumGreyColor,
@@ -1230,8 +1261,8 @@ class _ItemCardState extends State<ItemCard> {
                     ),
                   ),
                   Text(
-                    "July 25th",
-                    style: TextStyle(
+                    widget.productData.listingDate,
+                    style: const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w400,
                       color: CustomColors.mediumGreyColor,
@@ -1263,12 +1294,12 @@ class _BannerDislpayState extends State<BannerDislpay> {
       children: [
         CarouselSlider(
           options: CarouselOptions(
-            viewportFraction: 1,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              currentBannerNumber.value = index;
-            },
-          ),
+              viewportFraction: 1,
+              autoPlay: true,
+              onPageChanged: (index, reason) {
+                currentBannerNumber.value = index;
+              },
+              autoPlayInterval: const Duration(seconds: 3)),
           items: [
             Image.asset(AppMediaPaths.banner1),
             Image.asset(AppMediaPaths.banner2),

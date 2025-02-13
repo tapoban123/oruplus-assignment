@@ -1,11 +1,10 @@
 import 'package:oruplus_demo_app/model/auth/auth_repository.dart';
-import 'package:oruplus_demo_app/model/home/home_repository.dart';
 import 'package:stacked/stacked.dart';
 
-class OtpCreateViewModel extends BaseViewModel {
+class AuthViewModel extends BaseViewModel {
   final AuthRepository _authRepository;
 
-  OtpCreateViewModel({
+  AuthViewModel({
     required AuthRepository authRepository,
   }) : _authRepository = authRepository;
 
@@ -17,6 +16,20 @@ class OtpCreateViewModel extends BaseViewModel {
     await _authRepository.createOtp(
       countryCode: countryCode,
       mobileNumber: mobileNumber,
+    );
+    setBusy(false);
+  }
+
+  Future<void> validateOTP({
+    required int countryCode,
+    required int phoneNumber,
+    required int otp,
+  }) async {
+    setBusy(true);
+    await _authRepository.validateOtp(
+      countryCode: countryCode,
+      phoneNumber: phoneNumber,
+      otp: otp,
     );
     setBusy(false);
   }
